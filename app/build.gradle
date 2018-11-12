@@ -11,8 +11,8 @@ android {
         applicationId "com.homecredit.exam"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 3333
+        versionName "3.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
