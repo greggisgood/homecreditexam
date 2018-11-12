@@ -1,7 +1,13 @@
 package com.homecredit.exam;
 
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.homecredit.exam.cities.CitiesFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -9,5 +15,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showFragment(CitiesFragment.class, false, "", new Bundle()); // Always show the City List everytime the app loads for the first time
+    }
+
+    /**
+     * Displays the corresponding Fragment to the container
+     * @param fragmentClass - The class to instantiate the Fragment with
+     * @param addToBackStack - Whether to add this Fragment to the back stack or not
+     * @param tag - An optional tag for the Fragment
+     * @param bundle - An optional Bundle for the Fragment
+     */
+    public void showFragment(Class<?> fragmentClass, boolean addToBackStack, @Nullable String tag, @Nullable Bundle bundle) {
+        try {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            Fragment fragment = Fragment.instantiate(this, fragmentClass.getName(), bundle);
+            transaction.replace(R.id.container, fragment, tag);
+            if (addToBackStack) {
+                transaction.addToBackStack(null);
+            }
+            transaction.commit();
+
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 }

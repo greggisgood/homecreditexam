@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Home Credit Exam</string>
+    <string name="content_description">Content Description</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="city_list">City List</string>
+    <string name="no_cities_found">No cities found</string>
+    <string name="view">View</string>
 </resources>
