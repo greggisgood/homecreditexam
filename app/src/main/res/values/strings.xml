@@ -13,4 +13,7 @@
     <string name="avg_temp">Average Temperature:</string>
     <string name="hpa">hpa</string>
     <string name="city_info_error">Failed to retrieve city information. Please try again</string>
+    <string name="open_weather_app">OpenWeatherApp</string>
+    <string name="splash_body_1">Still under development!!!</string>
+    <string name="splash_body_2">Be informed with the latest weather news. Stay safe!!!</string>
 </resources>

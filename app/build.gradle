@@ -21,6 +21,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "Default"
+    productFlavors {
+        // test build because Android does not allow flavor names starting with test
+        demo {
+            buildConfigField 'String', 'CONFIG_TYPE', '"Test Build"'
+        }
+        development {
+            buildConfigField 'String', 'CONFIG_TYPE', '"Development Build"'
+        }
+        production {
+            buildConfigField 'String', 'CONFIG_TYPE', '"Production Build"'
+        }
+    }
 }
 
 dependencies {
