@@ -84,7 +84,7 @@ public class CitiesFragment extends Fragment {
             // If an existing request is being processed, cancel it
             if (cityCall != null)
             {
-                cityCall.cancelRequest();
+                cityCall.cancelCityListCallRequest();
             }
             else
             {

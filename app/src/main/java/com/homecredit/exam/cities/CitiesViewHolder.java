@@ -1,12 +1,17 @@
 package com.homecredit.exam.cities;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.homecredit.exam.MainActivity;
 import com.homecredit.exam.R;
+import com.homecredit.exam.cities.details.CityDetailsFragment;
+import com.homecredit.exam.constants.Values;
 import com.homecredit.exam.models.City;
 import com.homecredit.exam.models.Coordinates;
 import com.homecredit.exam.models.Temperature;
@@ -55,6 +60,23 @@ public class CitiesViewHolder extends RecyclerView.ViewHolder {
             {
                 coords.setText(String.format(Locale.getDefault(), "[%s, %s]", String.valueOf(coordinates.getLat()), String.valueOf(coordinates.getLongitude())));
             }
+
+            btnView.setOnClickListener(view -> {
+                try
+                {
+                    MainActivity mainActivity = (MainActivity) context;
+                    Gson gson = new Gson();
+                    String cityStr = gson.toJson(city);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Values.CITY_STR, cityStr);
+
+                    mainActivity.showFragment(CityDetailsFragment.class, true, "", bundle);
+                }
+                catch (NullPointerException | ClassCastException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 }

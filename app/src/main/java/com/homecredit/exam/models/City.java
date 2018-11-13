@@ -8,6 +8,8 @@ import java.util.List;
 public class City {
     @SerializedName("name") @Expose
     private String name;
+    @SerializedName("id") @Expose
+    private Integer id;
     @SerializedName("coord") @Expose
     private Coordinates coordinates;
     @SerializedName("main") @Expose
@@ -21,6 +23,14 @@ public class City {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Coordinates getCoordinates() {

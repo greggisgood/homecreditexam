@@ -14,7 +14,6 @@ import com.homecredit.exam.utils.AppLogger;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -24,7 +23,9 @@ import retrofit2.Response;
 public class CityCall {
     private static final String TAG = CityCall.class.getSimpleName();
     private Context context;
-    private Call<CityList> call;
+
+    private Call<CityList> cityListCall;
+    private Call<City> cityCall;
 
     public static CityCall with(Context context) {
         return new CityCall(context);
@@ -46,8 +47,8 @@ public class CityCall {
         params.put("id", TextUtils.join(",", Arrays.asList("3067696", "5391959", "2643743"))); // These IDs are from Prague, San Francisco and London, respectively
         params.put("appid", Values.API_KEY); // App ID is set to query the necessary data
 
-        call = api.getCities(params);
-        call.enqueue(new Callback<CityList>() {
+        cityListCall = api.getCities(params);
+        cityListCall.enqueue(new Callback<CityList>() {
             @Override
             public void onResponse(@NonNull Call<CityList> call, @NonNull Response<CityList> response) {
                 AppLogger.info(TAG, "retrieveCities onResponse()");
@@ -71,13 +72,13 @@ public class CityCall {
 
             @Override
             public void onFailure(@NonNull Call<CityList> call, @NonNull Throwable t) {
-                t.printStackTrace();
                 if (call.isCanceled())
                 {
                     AppLogger.error(TAG, "retrieveCities canceled");
                 }
                 else
                 {
+                    t.printStackTrace();
                     AppLogger.error(TAG, "retrieveCities onFailure()");
                     listener.onError();
                 }
@@ -85,11 +86,78 @@ public class CityCall {
         });
     }
 
-    public void cancelRequest()
+    /**
+     * Retrieves the details of one city, based on the City ID
+     * @param id - The City ID
+     * @param listener - The Listener for callback events
+     */
+    public void getCity(String id, @NonNull ApiCallback.GetCityListener listener)
     {
-        if (call != null)
+        ApiHandler api = ApiConnector.createService(ApiHandler.class);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("units", "metric"); // Set to Metric to change the temperature values to Celsius
+        params.put("id", id); // The ID of the city in question
+        params.put("appid", Values.API_KEY); // App ID is set to query the necessary data
+
+        cityCall = api.getCity(params);
+        cityCall.enqueue(new Callback<City>() {
+            @Override
+            public void onResponse(@NonNull Call<City> call, @NonNull Response<City> response) {
+                AppLogger.info(TAG, "getCity onResponse()");
+                if (response.isSuccessful())
+                {
+                    City city = response.body();
+                    if (city != null)
+                    {
+                        listener.onSuccess(city);
+                    }
+                    else
+                    {
+                        listener.onError();
+                    }
+                }
+                else
+                {
+                    listener.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<City> call, @NonNull Throwable t) {
+                if (cityCall.isCanceled())
+                {
+                    AppLogger.error(TAG, "retrieveCity canceled");
+                }
+                else
+                {
+                    t.printStackTrace();
+                    AppLogger.error(TAG, "getCity onFailure()");
+                    listener.onError();
+                }
+            }
+        });
+    }
+
+    /**
+     * Cancels the call to retrieve a city's information
+     */
+    public void cancelCityCallRequest()
+    {
+        if (cityCall != null)
         {
-            call.cancel();
+            cityCall.cancel();
+        }
+    }
+
+    /**
+     * Cancels the call to retrieve information of multiple cities
+     */
+    public void cancelCityListCallRequest()
+    {
+        if (cityListCall != null)
+        {
+            cityListCall.cancel();
         }
     }
 }

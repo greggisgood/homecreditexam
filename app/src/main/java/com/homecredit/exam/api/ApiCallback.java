@@ -11,4 +11,10 @@ public class ApiCallback {
         void onSuccess(List<City> cities);
         void onError();
     }
+
+    public interface GetCityListener
+    {
+        void onSuccess(City city);
+        void onError();
+    }
 }

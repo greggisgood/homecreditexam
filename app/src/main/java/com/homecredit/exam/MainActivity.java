@@ -40,4 +40,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Pops the back stack
+     */
+    public void popBackStack() {
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm != null) {
+            fm.popBackStack();
+        }
+    }
 }
