@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.homecredit.exam.api.ApiCallback;
 import com.homecredit.exam.api.ApiConnector;
 import com.homecredit.exam.api.ApiHandler;
+import com.homecredit.exam.cache.CacheManager;
 import com.homecredit.exam.constants.Values;
 import com.homecredit.exam.models.City;
 import com.homecredit.exam.models.api.CityList;
@@ -14,6 +16,7 @@ import com.homecredit.exam.utils.AppLogger;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -23,6 +26,7 @@ import retrofit2.Response;
 public class CityCall {
     private static final String TAG = CityCall.class.getSimpleName();
     private Context context;
+    private CacheManager manager;
 
     private Call<CityList> cityListCall;
     private Call<City> cityCall;
@@ -33,6 +37,7 @@ public class CityCall {
 
     private CityCall(Context context) {
         this.context = context;
+        manager = CacheManager.with(context);
     }
 
     /**
@@ -55,9 +60,14 @@ public class CityCall {
                 if (response.isSuccessful())
                 {
                     CityList cityList = response.body();
-                    if (cityList != null)
+                    if (cityList != null && !cityList.getCityList().isEmpty())
                     {
-                        listener.onSuccess(cityList.getCityList());
+                        List<City> cities = cityList.getCityList();
+                        Gson gson = new Gson();
+                        String listStr = gson.toJson(cities);
+                        manager.writeToFile(listStr, Values.CITIES_LIST);
+
+                        listener.onSuccess(cities);
                     }
                     else
                     {

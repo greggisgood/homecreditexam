@@ -1,6 +1,5 @@
 package com.homecredit.exam.cities;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.homecredit.exam.R;
 import com.homecredit.exam.api.ApiCallback;
 import com.homecredit.exam.api.calls.CityCall;
+import com.homecredit.exam.cache.CacheHandler;
 import com.homecredit.exam.models.City;
 import com.homecredit.exam.utils.AppLogger;
 
@@ -38,7 +38,6 @@ public class CitiesFragment extends Fragment {
     private CityCall cityCall;
 
     @BindView(R.id.back) ImageButton back;
-    @BindView(R.id.refresh) ImageButton refresh;
     @BindView(R.id.title) TextView title;
     @BindView(R.id.recyclerView) RecyclerView recyclerView;
     @BindView(R.id.progressBar) ProgressBar progressBar;
@@ -64,7 +63,22 @@ public class CitiesFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         back.setVisibility(View.INVISIBLE);
         title.setText(cityListStr);
-        retrieveCities();
+
+        if (getContext() != null)
+        {
+            CacheHandler handler = CacheHandler.getInstance(getContext());
+            List<City> cities = handler.getCities();
+            if (!cities.isEmpty())
+            {
+                // If the cache exists, use the cache data to immediately display the data.
+                setupData(cities);
+            }
+            else
+            {
+                // Otherwise, retrieve the cities using an API call.
+                retrieveCities();
+            }
+        }
         return view;
     }
 
@@ -98,24 +112,8 @@ public class CitiesFragment extends Fragment {
             cityCall.retrieveCities(new ApiCallback.GetCitiesListener() {
                 @Override
                 public void onSuccess(List<City> cities) {
-                    progressBar.setVisibility(View.GONE);
-                    if (!cities.isEmpty())
-                    {
-                        AppLogger.info(TAG, "retrieveCities onSuccess()");
-                        Context ctx = getContext();
-                        if (ctx != null)
-                        {
-                            recyclerView.setVisibility(View.VISIBLE);
-                            LinearLayoutManager llm = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-                            recyclerView.setLayoutManager(llm);
-                            CitiesAdapter adapter = new CitiesAdapter(ctx, cities);
-                            recyclerView.setAdapter(adapter);
-                        }
-                    }
-                    else
-                    {
-                        this.onError();
-                    }
+                    AppLogger.info(TAG, "retrieveCities onSuccess()");
+                    setupData(cities);
                 }
 
                 @Override
@@ -127,6 +125,27 @@ public class CitiesFragment extends Fragment {
                     error.setVisibility(View.VISIBLE);
                 }
             });
+        }
+    }
+
+    /**
+     * Sets the received data to the Adapter
+     * @param cities - The list of cities
+     */
+    private void setupData(List<City> cities)
+    {
+        progressBar.setVisibility(View.GONE);
+        error.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+
+        Context ctx = getContext();
+        if (ctx != null)
+        {
+            recyclerView.setVisibility(View.VISIBLE);
+            LinearLayoutManager llm = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(llm);
+            CitiesAdapter adapter = new CitiesAdapter(ctx, cities);
+            recyclerView.setAdapter(adapter);
         }
     }
 }

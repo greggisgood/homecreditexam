@@ -10,4 +10,5 @@ public class Values {
     public static final String API_KEY = "d4d20406770c14406557a224f0d2e14e";
 
     public static final String CITY_STR = "cityStr";
+    public static final String CITIES_LIST = "cities_list";
 }
