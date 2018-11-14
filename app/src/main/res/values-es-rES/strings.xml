@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Home Credit Exam</string>
+    <string name="content_description">Contenido Descripton</string>
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="city_list">Ciudad Lista</string>
+    <string name="city_details">Ciudad Detalles</string>
+    <string name="no_cities_found">No se encontraron ciudades</string>
+    <string name="view">Ver</string>
+    <string name="pressure">Presión:</string>
+    <string name="humidity">Humedad:</string>
+    <string name="avg_temp">Rango de temperatura</string>
+    <string name="hpa">hpa</string>
+    <string name="city_info_error">Error al recuperar la información de la ciudad. Inténtalo de nuevo</string>
+    <string name="open_weather_app">OpenWeatherApp</string>
+    <string name="splash_body_1">Todavía en desarrollo!!!</string>
+    <string name="splash_body_2">Mantente informado con las últimas noticias del tiempo. ¡¡¡Mantenerse a salvo!!!</string>
+</resources>
